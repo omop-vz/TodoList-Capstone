@@ -8,7 +8,7 @@
 import Testing
 @testable import TodoList_Capstone
 
-struct TodoList_CapstoneTests {
+struct TodoListCapstoneTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

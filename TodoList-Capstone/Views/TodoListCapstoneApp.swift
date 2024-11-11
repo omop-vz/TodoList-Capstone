@@ -8,16 +8,15 @@ import SwiftUI
 import SwiftData
 
 @main
-struct TodoList_CapstoneApp: App {
-    
+struct TodoListCapstoneApp: App {
+
+    @StateObject var listViewModel: ListViewModel = ListViewModel()
 
     var body: some Scene {
         WindowGroup {
-            NavigationView{
+            NavigationView {
                 ListView()
-            }
+            }.environmentObject(listViewModel)
         }
-        //.modelContainer(sharedModelContainer)
     }
 }
-

@@ -7,9 +7,10 @@
 
 import XCTest
 
-final class TodoList_CapstoneUITestsLaunchTests: XCTestCase {
+final class TodoListCapstoneUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
+        // swiftlint:disable:previous static_over_final_class
         true
     }
 

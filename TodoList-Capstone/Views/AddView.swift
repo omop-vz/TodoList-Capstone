@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct AddView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var listViewModel: ListViewModel
     @State var textFieldText: String = ""
+    @State var showAlert = false
+
     var body: some View {
-        ScrollView{
-            VStack{
+        ScrollView {
+            VStack {
                 TextField("Type something here...", text: $textFieldText)
                     .padding(.horizontal)
                     .frame(height: 55)
                     .background(Color(.lightGray))
                     .cornerRadius(10)
                // Spacer()
-                Button(action: {
-                    
-                }
+                Button(action: saveButtonPressed
                         ,
                        label: {
                     Text("Save".uppercased())
@@ -32,14 +34,36 @@ struct AddView: View {
                         .cornerRadius(10)
                 }
                     )
-                
             }.padding(14)
         }.navigationTitle("Add an Item ✏️")
+            .alert("Invalid Input", isPresented: $showAlert) {
+                Button("Okay!😯", role: .cancel) {
+
+                }
+            } message: {
+                Text("Input must be 3 characters long!😥😓")
+            }
+
+    }
+
+    func saveButtonPressed() {
+        if textIsAppropriate() {
+            listViewModel.addItem(title: textFieldText)
+            dismiss()
+        }
+    }
+
+    func textIsAppropriate() -> Bool {
+        if textFieldText.count < 3 {
+            showAlert.toggle()
+            return false
+        }
+        return true
     }
 }
 
 #Preview {
-    NavigationView{
+    NavigationView {
         AddView()
-    }
+    }.environmentObject(ListViewModel())
 }
