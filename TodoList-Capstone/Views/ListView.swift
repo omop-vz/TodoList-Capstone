@@ -8,28 +8,40 @@
 import SwiftUI
 
 struct ListView: View {
-    @State var items: [String] = ["First title","Second Title","third title"]
-    
+    @EnvironmentObject var listViewModel: ListViewModel
+
     var body: some View {
-        List{
-            ForEach(items, id: \.self) { item in
-                ListRowView(title: item)
+        ZStack {
+            if listViewModel.items.isEmpty {
+                NoItemsView().transition(AnyTransition.opacity.animation(.easeIn))
+            } else {
+                List {
+                    ForEach(listViewModel.items) { item in
+                        ListRowView(item: item)
+                            .onTapGesture {
+                                withAnimation(.linear) {
+                                    listViewModel.updateItem(item: item)
+                                }
+                            }
+                    }.onDelete(perform: listViewModel.deleteItem)
+                        .onMove(perform: listViewModel.moveItem)
+                }.listStyle(.automatic)
             }
-        }.navigationTitle("To-Do List 📝")
-            .toolbar{
-                ToolbarItem(placement: .topBarLeading){
+        }
+        .navigationTitle("To-Do List 📝")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
-                ToolbarItem(placement: .topBarTrailing){
-                    NavigationLink("Add", destination: AddView())
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink("Add Items", destination: AddView())
                 }
             }
     }
 }
 
 #Preview {
-    NavigationView{
+    NavigationView {
         ListView()
-    }
+    }.environmentObject(ListViewModel())
 }
-
