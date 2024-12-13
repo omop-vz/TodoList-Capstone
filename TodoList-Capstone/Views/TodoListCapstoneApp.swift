@@ -14,8 +14,8 @@ struct TodoListCapstoneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                ListView()
+            NavigationStack {
+                ListView(currentItem: ItemModel(title: "RandomTask", isCompleted: true))
             }.navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(listViewModel)
         }

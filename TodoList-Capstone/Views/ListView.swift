@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ListView: View {
     @EnvironmentObject var listViewModel: ListViewModel
-
+    @AppStorage("isOnboardingScreenShowing") var isOnboardingScrenShowing = true
+    @State var isTextEditorShowing = false
+    @State var currentItem: ItemModel
     var body: some View {
         ZStack {
             if listViewModel.items.isEmpty {
@@ -23,6 +25,15 @@ struct ListView: View {
                                     listViewModel.updateItem(item: item)
                                 }
                             }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    currentItem = item
+                                    isTextEditorShowing.toggle()
+                                } label: {
+                                    Label("EditText", systemImage: "highlighter")
+                                }
+
+                            }
                     }.onDelete(perform: listViewModel.deleteItem)
                         .onMove(perform: listViewModel.moveItem)
                 }.listStyle(.automatic)
@@ -32,16 +43,23 @@ struct ListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
+                        .opacity(listViewModel.items.isEmpty ? 0 : 1)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink("Add Items", destination: AddView())
+                        .opacity(listViewModel.items.isEmpty ? 0 : 1)
                 }
+            }
+            .fullScreenCover(isPresented: $isOnboardingScrenShowing) {
+                OnbaordingView(isOnboardingScreenShowing: $isOnboardingScrenShowing)
+            }.fullScreenCover(isPresented: $isTextEditorShowing) {
+                TextEditView(currentItem: $currentItem)
             }
     }
 }
 
 #Preview {
-    NavigationView {
-        ListView()
+    NavigationStack {
+        ListView(currentItem: ItemModel(title: "RandomTask", isCompleted: true))
     }.environmentObject(ListViewModel())
 }

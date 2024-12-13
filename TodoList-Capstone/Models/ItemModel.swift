@@ -9,7 +9,7 @@ import Foundation
 
 struct ItemModel: Identifiable, Codable {
     let id: UUID
-    let title: String
+    var title: String
     let isCompleted: Bool
 
     init(id: UUID = UUID(), title: String, isCompleted: Bool) {
@@ -20,5 +20,9 @@ struct ItemModel: Identifiable, Codable {
 
     func updateCompletion() -> ItemModel {
         return ItemModel(id: id, title: title, isCompleted: !isCompleted)
+    }
+
+    func editCompletion(newText: String) -> ItemModel {
+        return ItemModel(id: id, title: newText, isCompleted: isCompleted)
     }
 }
