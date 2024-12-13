@@ -22,7 +22,7 @@ struct ListRowView: View {
 }
 
 #Preview {
-    NavigationView {
+    NavigationStack {
         ListRowView(item: ItemModel(title: "First title", isCompleted: true))
     }
 }

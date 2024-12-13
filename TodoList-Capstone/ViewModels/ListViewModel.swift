@@ -13,7 +13,9 @@ class ListViewModel: ObservableObject {
             saveItems()
         }
     }
+
     let itemsKey = "items-list"
+
     init() {
         getItems()
     }
@@ -30,21 +32,31 @@ class ListViewModel: ObservableObject {
     func deleteItem(indexSet: IndexSet) {
         items.remove(atOffsets: indexSet)
     }
+
     func moveItem(from: IndexSet, moveTo: Int) {
         items.move(fromOffsets: from, toOffset: moveTo)
     }
+
     func addItem(title: String) {
         let item = ItemModel(title: title, isCompleted: false)
         items.append(item)
     }
+
     func updateItem(item: ItemModel) {
         if let index = items.firstIndex(where: {$0.id == item.id}) {
             items[index] = item.updateCompletion()
         }
+
     }
     func saveItems() {
         if let encodedData = try? JSONEncoder().encode(items) {
             UserDefaults.standard.set(encodedData, forKey: itemsKey)
+        }
+    }
+
+    func editText(newText: String, item: ItemModel) {
+        if let index = items.firstIndex(where: {$0.id == item.id}) {
+            items[index] = item.editCompletion(newText: newText)
         }
     }
 }

@@ -1,15 +1,16 @@
 //
-//  AddView.swift
+//  TextEditView.swift
 //  TodoList-Capstone
 //
-//  Created by Om Prakash Singh on 05/11/24.
+//  Created by Om Prakash Singh on 14/12/24.
 //
 
 import SwiftUI
 
-struct AddView: View {
-    @Environment(\.dismiss) var dismiss
+struct TextEditView: View {
+    @Binding var currentItem: ItemModel
     @EnvironmentObject var listViewModel: ListViewModel
+    @Environment(\.dismiss) var dismiss
     @State var textFieldText: String = ""
     @State var showAlert = false
 
@@ -25,7 +26,7 @@ struct AddView: View {
                 Button(action: saveButtonPressed
                         ,
                        label: {
-                    Text("Save".uppercased())
+                    Text("Edit Text".uppercased())
                         .foregroundStyle(Color(.white))
                         .font(.headline)
                         .frame(height: 55)
@@ -34,8 +35,11 @@ struct AddView: View {
                         .cornerRadius(10)
                 }
                     )
-            }.padding(14)
-        }.navigationTitle("Add an Item ✏️")
+            }.onAppear {
+                textFieldText = currentItem.title
+            }
+            .padding(14)
+        }.navigationTitle("Edit Task Name ✏️")
             .alert("Invalid Input", isPresented: $showAlert) {
                 Button("Okay!😯", role: .cancel) {
 
@@ -48,7 +52,7 @@ struct AddView: View {
 
     func saveButtonPressed() {
         if textIsAppropriate() {
-            listViewModel.addItem(title: textFieldText)
+            listViewModel.editText(newText: textFieldText, item: currentItem)
             dismiss()
         }
     }
@@ -60,10 +64,10 @@ struct AddView: View {
         }
         return true
     }
-}
+    }
 
 #Preview {
     NavigationStack {
-        AddView()
-    }.environmentObject(ListViewModel())
+        TextEditView(currentItem: .constant(ItemModel(title: "RandomTask", isCompleted: true)))
+            }.environmentObject(ListViewModel() )
 }
